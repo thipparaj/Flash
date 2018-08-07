@@ -1,5 +1,10 @@
 package testScript.practice.testBase;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -7,6 +12,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class TestBase {
 	
 	public WebDriver driver;
+	public File file;
+	public FileInputStream freader;
+	public Properties prop;
 	
 
 	public String getBrowser(String myBrowser) {
@@ -36,8 +44,29 @@ public class TestBase {
 		return null;
 	}
 	
-	public static void main(String[] args) {
+	public void loadpropertiesFile() throws IOException {
+		prop = new Properties();
+		file = new File(System.getProperty("user.dir")+"\\src\\main\\java\\testScript\\practice\\config\\config.properties");
+		freader = new FileInputStream(file);
+		prop.load(freader);
+		
+		file = new File(System.getProperty("user.dir")+"\\src\\main\\java\\testScript\\practice\\config\\OR.properties");
+		freader = new FileInputStream(file);
+		prop.load(freader);
+		
+	}
+	
+	public String getPropertiesData(String Data) throws IOException {
+		loadpropertiesFile();
+		String data = prop.getProperty(Data);
+		return data;
+	}
+	
+	public static void main(String[] args) throws IOException {
 		TestBase test = new TestBase();
-		System.out.println(test.getBrowser("chrome"));
+		
+		test.loadpropertiesFile();
+		System.out.println(test.prop.getProperty("test"));
+		System.out.println(test.prop.getProperty("url"));
 	}
 }
